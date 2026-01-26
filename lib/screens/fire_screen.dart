@@ -27,6 +27,7 @@ class _FireScreenState extends State<FireScreen> {
   ProjectionSettings _projectionSettings = const ProjectionSettings();
   FireSettings _fireSettings = const FireSettings();
   bool _isLoading = true;
+  bool _showInfoCard = false;
 
   @override
   void initState() {
@@ -136,8 +137,6 @@ class _FireScreenState extends State<FireScreen> {
         children: [
           _buildSummaryCards(fireResult),
           const SizedBox(height: 24),
-          _buildInfoCard(),
-          const SizedBox(height: 16),
           _buildInputCard(),
           const SizedBox(height: 24),
           _buildProgressSection(fireResult),
@@ -171,9 +170,13 @@ class _FireScreenState extends State<FireScreen> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
-            _buildInfoCard(),
-            const SizedBox(height: 16),
             _buildInputCard(),
+            const SizedBox(height: 16),
+            TextButton.icon(
+              onPressed: _showInfoDialog,
+              icon: const Icon(Icons.info_outline),
+              label: const Text('Learn About FIRE'),
+            ),
           ],
         ),
       ),
@@ -395,9 +398,24 @@ class _FireScreenState extends State<FireScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'FIRE Settings',
-                style: Theme.of(context).textTheme.titleMedium,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'FIRE Settings',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.info_outline),
+                    onPressed: _showInfoDialog,
+                    tooltip: 'Learn about FIRE',
+                    constraints: const BoxConstraints(
+                      minWidth: 40,
+                      minHeight: 40,
+                    ),
+                    padding: EdgeInsets.zero,
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -656,6 +674,79 @@ class _FireScreenState extends State<FireScreen> {
           style: Theme.of(context).textTheme.bodySmall,
         ),
       ],
+    );
+  }
+
+  void _showInfoDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'About FIRE',
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'What is FIRE?',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'FIRE stands for Financial Independence, Retire Early. It\'s a movement focused on achieving financial freedom through aggressive saving and smart investing.',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'The 4% Rule',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'The 4% rule suggests that you can safely withdraw 4% of your portfolio annually in retirement. Your FIRE number is calculated as: Annual Income ÷ 0.04 = Required Portfolio.',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'For example, if you need \$40,000 per year, your FIRE number would be \$1,000,000 (\$40,000 ÷ 0.04).',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          fontStyle: FontStyle.italic,
+                          color: Colors.grey.shade700,
+                        ),
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Got it'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
