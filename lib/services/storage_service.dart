@@ -3,11 +3,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/investment_account.dart';
 import '../models/asset.dart';
 import '../models/projection_settings.dart';
+import '../models/fire_settings.dart';
 
 class StorageService {
   static const String _investmentsKey = 'investments';
   static const String _assetsKey = 'assets';
   static const String _settingsKey = 'projection_settings';
+  static const String _fireSettingsKey = 'fire_settings';
 
   // Investment Accounts
   Future<void> saveInvestments(List<InvestmentAccount> accounts) async {
@@ -77,6 +79,28 @@ class StorageService {
     }
   }
 
+  // FIRE Settings
+  Future<void> saveFireSettings(FireSettings settings) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_fireSettingsKey, jsonEncode(settings.toJson()));
+    } catch (e) {
+      throw Exception('Failed to save FIRE settings: $e');
+    }
+  }
+
+  Future<FireSettings> loadFireSettings() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final jsonString = prefs.getString(_fireSettingsKey);
+      if (jsonString == null) return const FireSettings();
+      final json = jsonDecode(jsonString);
+      return FireSettings.fromJson(json);
+    } catch (e) {
+      throw Exception('Failed to load FIRE settings: $e');
+    }
+  }
+
   // Clear all data (useful for testing or reset)
   Future<void> clearAllData() async {
     try {
@@ -84,6 +108,7 @@ class StorageService {
       await prefs.remove(_investmentsKey);
       await prefs.remove(_assetsKey);
       await prefs.remove(_settingsKey);
+      await prefs.remove(_fireSettingsKey);
     } catch (e) {
       throw Exception('Failed to clear data: $e');
     }

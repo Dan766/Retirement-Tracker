@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'portfolio_screen.dart';
+import 'fire_screen.dart';
 import 'analytics_screen.dart';
 import 'settings_screen.dart';
 
@@ -15,6 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> _screens = [
     const PortfolioScreen(),
+    const FireScreen(),
     const AnalyticsScreen(),
     const SettingsScreen(),
   ];
@@ -34,6 +36,9 @@ class _HomeScreenState extends State<HomeScreen> {
             _selectedIndex = index;
           });
         },
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.account_balance_wallet),
@@ -42,6 +47,10 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.bar_chart),
             label: 'Analytics',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_fire_department),
+            label: 'FIRE',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
